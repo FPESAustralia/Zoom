@@ -723,7 +723,7 @@
   <div class="page" id="page-company">
     <div class="period-label">Company & Site · Jan–Feb 2026</div>
 
-    <div class="section-title">By Company / Division</div>
+    <div class="section-title">By Branch / Location</div>
     <div class="chart-card" style="margin-bottom:16px">
       <div class="table-wrap">
         <table id="companyTable">
@@ -745,15 +745,34 @@
       </div>
     </div>
 
+    <div class="section-title">By State</div>
+    <div class="chart-card" style="margin-bottom:16px">
+      <div class="table-wrap">
+        <table id="stateTable">
+          <thead>
+            <tr>
+              <th>State</th>
+              <th>Branches</th>
+              <th>Assessments</th>
+              <th>Suitable</th>
+              <th>Unsuitable</th>
+              <th>Suitability Rate</th>
+            </tr>
+          </thead>
+          <tbody id="stateTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
     <div class="chart-row cols-2">
       <div class="chart-card">
-        <h3>Volume by Company</h3>
-        <div class="chart-sub">Total assessments per company</div>
+        <h3>Volume by State</h3>
+        <div class="chart-sub">Total assessments per state</div>
         <div class="chart-wrap tall"><canvas id="chartCompanyVol"></canvas></div>
       </div>
       <div class="chart-card">
-        <h3>Suitability Rate by Company</h3>
-        <div class="chart-sub">% suitable per company</div>
+        <h3>Suitability Rate by State</h3>
+        <div class="chart-sub">% suitable per state</div>
         <div class="chart-wrap tall"><canvas id="chartCompanySuit"></canvas></div>
       </div>
     </div>
@@ -1058,16 +1077,55 @@ function renderAll(d) {
     </tr>
   `).join('');
 
-  const compNames = d.companies.map(c => c.company.split(' ').slice(0,2).join(' '));
+  // State summary table — aggregate branches by state
+  const stateAgg = {};
+  d.companies.forEach(c => {
+    const s = c.state || 'Unknown';
+    if (!stateAgg[s]) stateAgg[s] = { state: s, branches: 0, total: 0, suit: 0 };
+    stateAgg[s].branches += 1;
+    stateAgg[s].total += c.total;
+    stateAgg[s].suit += c.suit;
+  });
+
+  const stateRows = Object.values(stateAgg).sort((a, b) => b.total - a.total);
+  const stateTbody = document.getElementById('stateTableBody');
+  const grandTotal = stateRows.reduce((a, b) => a + b.total, 0);
+  const grandSuit  = stateRows.reduce((a, b) => a + b.suit, 0);
+
+  stateTbody.innerHTML = stateRows.map(s => {
+    const sp = s.total ? +(s.suit / s.total * 100).toFixed(1) : 0;
+    const pillClass = sp >= 90 ? 'pill-green' : sp >= 86 ? 'pill-blue' : 'pill-amber';
+    return `<tr>
+      <td><strong>${s.state}</strong></td>
+      <td>${s.branches}</td>
+      <td>${s.total.toLocaleString()}</td>
+      <td>${s.suit.toLocaleString()}</td>
+      <td>${(s.total - s.suit).toLocaleString()}</td>
+      <td><span class="pill ${pillClass}">${sp}%</span></td>
+    </tr>`;
+  }).join('') + `<tr style="border-top: 2px solid var(--border); font-weight:600;">
+    <td>Total</td>
+    <td>${stateRows.length} states</td>
+    <td>${grandTotal.toLocaleString()}</td>
+    <td>${grandSuit.toLocaleString()}</td>
+    <td>${(grandTotal - grandSuit).toLocaleString()}</td>
+    <td><span class="pill pill-blue">${grandTotal ? (grandSuit/grandTotal*100).toFixed(1) : 0}%</span></td>
+  </tr>`;
+
+  // State charts
+  const stateLabels = stateRows.map(s => s.state);
+  const stateVolumes = stateRows.map(s => s.total);
+  const stateSuitPct = stateRows.map(s => s.total ? +(s.suit/s.total*100).toFixed(1) : 0);
+
   destroyAndCreate('chartCompanyVol', 'bar', {
-    labels: compNames,
-    datasets: [{ data: d.companies.map(c => c.total), backgroundColor: NAVY }]
+    labels: stateLabels,
+    datasets: [{ data: stateVolumes, backgroundColor: NAVY }]
   }, { ...barOpts(), indexAxis: 'y', plugins: { legend: { display: false } } });
 
   destroyAndCreate('chartCompanySuit', 'bar', {
-    labels: compNames,
-    datasets: [{ data: d.companies.map(c => c.suit_pct), backgroundColor: d.companies.map(c => c.suit_pct >= 93 ? GREEN : c.suit_pct >= 89 ? SOFT : AMBER) }]
-  }, { ...barOpts(), indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { grid: { color: '#eef2f5' }, min: 80, max: 100, ticks: { callback: v => v + '%' } }, y: { grid: { display: false } } } });
+    labels: stateLabels,
+    datasets: [{ data: stateSuitPct, backgroundColor: stateSuitPct.map(p => p >= 90 ? GREEN : p >= 86 ? SOFT : AMBER) }]
+  }, { ...barOpts(), indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { grid: { color: '#eef2f5' }, min: 75, max: 100, ticks: { callback: v => v + '%' } }, y: { grid: { display: false } } } });
 
   // Update KPIs
   const total = d.volume.reduce((a,b) => a+b, 0);
