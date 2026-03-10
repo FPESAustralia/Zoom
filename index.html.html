@@ -479,30 +479,30 @@
 
   <!-- SUMMARY PAGE -->
   <div class="page active" id="page-summary">
-    <div class="demo-notice">⚠️ Displaying <strong>demonstration data</strong> — upload your monthly export above to populate with real figures.</div>
+    
 
-    <div class="period-label" id="summaryPeriod">Jul – Dec 2025 · Period Summary</div>
+    <div class="period-label" id="summaryPeriod">Jan – Feb 2026 · Period Summary</div>
 
     <div class="kpi-grid">
       <div class="kpi-card">
         <div class="kpi-label">Total Assessments</div>
-        <div class="kpi-value" id="kpiTotal">6,119</div>
+        <div class="kpi-value" id="kpiTotal">1,325</div>
         <div class="kpi-sub">Jul–Dec 2025</div>
       </div>
       <div class="kpi-card green">
         <div class="kpi-label">Total Suitable</div>
-        <div class="kpi-value" id="kpiSuitable">5,629</div>
-        <div class="kpi-sub"><span class="kpi-badge badge-green" id="kpiSuitPct">92.0%</span> period average</div>
+        <div class="kpi-value" id="kpiSuitable">1,159</div>
+        <div class="kpi-sub"><span class="kpi-badge badge-green" id="kpiSuitPct">87.5%</span> period average</div>
       </div>
       <div class="kpi-card red">
         <div class="kpi-label">Total Unsuitable</div>
-        <div class="kpi-value" id="kpiUnsuitable">490</div>
-        <div class="kpi-sub"><span class="kpi-badge badge-red" id="kpiUnsuitPct">8.0%</span> period average</div>
+        <div class="kpi-value" id="kpiUnsuitable">166</div>
+        <div class="kpi-sub"><span class="kpi-badge badge-red" id="kpiUnsuitPct">12.5%</span> period average</div>
       </div>
       <div class="kpi-card amber">
         <div class="kpi-label">Best Turnaround</div>
-        <div class="kpi-value" id="kpiBestTA">1.2<span style="font-size:18px">hrs</span></div>
-        <div class="kpi-sub" id="kpiBestTAMonth">September 2025</div>
+        <div class="kpi-value" id="kpiBestTA">1.5<span style="font-size:18px">hrs</span></div>
+        <div class="kpi-sub" id="kpiBestTAMonth">Feb 2026</div>
       </div>
     </div>
 
@@ -511,19 +511,19 @@
     <div class="insights-grid">
       <div class="insight-card">
         <h4>Overall Volume</h4>
-        <p id="insightVolume"><strong>6,119 assessments</strong> delivered across 6 months. October was the peak month (1,272), with December the lowest (715) as expected seasonally.</p>
+        <p id="insightVolume"><strong>1,325 assessments</strong> delivered across Jan–Feb 2026. February was the higher volume month at <strong>757</strong>, up from 568 in January — a 33% increase month-on-month.</p>
       </div>
       <div class="insight-card">
         <h4>Suitability Consistency</h4>
-        <p id="insightSuitability">Suitability ranged from <strong>91.1% to 94.4%</strong> — a narrow 3.3 percentage point band, indicating highly consistent and reliable screening outcomes period-wide.</p>
+        <p id="insightSuitability">Suitability ranged from <strong>84.3% to 91.7%</strong> across the two months — a 7.4 point shift. January performed strongly at 91.7%, while February saw a notable dip, driven by a spike in <strong>Not Suitable</strong> results (2 in Jan vs 77 in Feb).</p>
       </div>
       <div class="insight-card">
         <h4>Turnaround Performance</h4>
-        <p id="insightTurnaround">Median turnaround stayed between <strong>1.2 and 1.7 hours</strong> across all months. September achieved the best result; all months reflect same-session processing capability.</p>
+        <p id="insightTurnaround">Median turnaround was <strong>1.73 hrs in January</strong> and <strong>1.53 hrs in February</strong> — both well within same-session benchmarks, with February showing a faster result despite higher volume.</p>
       </div>
       <div class="insight-card">
         <h4>Demographic Profile</h4>
-        <p id="insightDemographics">Cohort is consistently <strong>71–73% male</strong> and skewed towards the <strong>20–39 age bracket</strong> (72% of all assessments) — reflective of physically demanding heavy-role recruitment pipelines.</p>
+        <p id="insightDemographics">Cohort is <strong>73.8% male</strong> and concentrated in the <strong>20–29 age bracket</strong> (46% of all assessments). NSW leads by volume (584), followed by VIC (431) — together representing 76% of all assessments.</p>
       </div>
     </div>
 
@@ -556,7 +556,7 @@
 
   <!-- VOLUME PAGE -->
   <div class="page" id="page-volume">
-    <div class="period-label">Volume & Suitability · Monthly Detail</div>
+    <div class="period-label">Volume & Suitability · Jan–Feb 2026</div>
     <div class="chart-row cols-1">
       <div class="chart-card">
         <h3>Monthly Assessment Volume</h3>
@@ -576,17 +576,11 @@
         <div class="chart-wrap"><canvas id="chartScreenType"></canvas></div>
       </div>
     </div>
-    <div class="section-title">Volume by Position</div>
-    <div class="chart-card">
-      <h3>Applicants per Position</h3>
-      <div class="chart-sub">Top positions by assessment volume</div>
-      <div class="chart-wrap tall"><canvas id="chartPositions"></canvas></div>
-    </div>
   </div>
 
   <!-- DEMOGRAPHICS PAGE -->
   <div class="page" id="page-demographics">
-    <div class="period-label">Demographics · Gender & Age</div>
+    <div class="period-label">Demographics · Jan–Feb 2026</div>
     <div class="chart-row cols-3">
       <div class="chart-card">
         <h3>Gender Split</h3>
@@ -620,54 +614,56 @@
 
   <!-- TURNAROUND PAGE -->
   <div class="page" id="page-turnaround">
-    <div class="period-label">Turnaround · Booking to Result</div>
+    <div class="period-label">Turnaround · Jan–Feb 2026</div>
 
     <div class="kpi-grid">
       <div class="kpi-card green">
-        <div class="kpi-label">Best Median (Overall)</div>
-        <div class="kpi-value">1.2<span style="font-size:18px">hrs</span></div>
-        <div class="kpi-sub">September 2025</div>
+        <div class="kpi-label">Best Monthly Median</div>
+        <div class="kpi-value">1.53<span style="font-size:18px">hrs</span></div>
+        <div class="kpi-sub">February 2026</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">Period Median</div>
-        <div class="kpi-value">1.4<span style="font-size:18px">hrs</span></div>
-        <div class="kpi-sub">All months</div>
+        <div class="kpi-value">1.63<span style="font-size:18px">hrs</span></div>
+        <div class="kpi-sub">Jan–Feb 2026</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-label">Medequest Median</div>
-        <div class="kpi-value">1.3<span style="font-size:18px">hrs</span></div>
-        <div class="kpi-sub">Period average</div>
+        <div class="kpi-label">January Median</div>
+        <div class="kpi-value">1.73<span style="font-size:18px">hrs</span></div>
+        <div class="kpi-sub">Screen Safe</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-label">Physio Screen Median</div>
-        <div class="kpi-value">1.6<span style="font-size:18px">hrs</span></div>
-        <div class="kpi-sub">Period average</div>
+        <div class="kpi-label">February Median</div>
+        <div class="kpi-value">1.53<span style="font-size:18px">hrs</span></div>
+        <div class="kpi-sub">Screen Safe</div>
       </div>
     </div>
 
-    <div class="turnaround-split">
+    <div class="chart-row cols-1">
       <div class="chart-card">
-        <h3>Medequest — Turnaround by Month</h3>
-        <div class="chart-sub">Booking Added Date → Result Sent Date (median hours)</div>
+        <h3>Screen Safe — Turnaround by Month</h3>
+        <div class="chart-sub">Median hours from Booking Added Date to Result Sent Date</div>
         <div class="chart-wrap tall"><canvas id="chartTAMedequest"></canvas></div>
       </div>
-      <div class="chart-card">
-        <h3>Physio Screen — Turnaround by Month</h3>
-        <div class="chart-sub">Booking Added Date → Result Sent Date (median hours)</div>
-        <div class="chart-wrap tall"><canvas id="chartTAPhysio"></canvas></div>
-      </div>
     </div>
 
-    <div class="chart-card">
-      <h3>Combined Turnaround Comparison</h3>
-      <div class="chart-sub">Medequest vs Physio Screen — median hours per month</div>
-      <div class="chart-wrap tall"><canvas id="chartTACompare"></canvas></div>
+    <div class="chart-row cols-2">
+      <div class="chart-card">
+        <h3>Turnaround Distribution</h3>
+        <div class="chart-sub">Share of assessments completed within time bands</div>
+        <div class="chart-wrap"><canvas id="chartTACompare"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Volume vs Turnaround</h3>
+        <div class="chart-sub">Monthly volume alongside median turnaround</div>
+        <div class="chart-wrap"><canvas id="chartTAPhysio"></canvas></div>
+      </div>
     </div>
   </div>
 
   <!-- K10 PAGE -->
   <div class="page" id="page-k10">
-    <div class="period-label">K10 Psychological Screening · Kessler Scale</div>
+    <div class="period-label">K10 Psychological Screening · Jan–Feb 2026</div>
 
     <div class="chart-card" style="margin-bottom:16px">
       <h3>K10 Scale Reference</h3>
@@ -676,22 +672,22 @@
         <div class="k10-band k10-low">
           <div class="score">10–15</div>
           <div class="label">Low</div>
-          <div class="count" id="k10LowCount">4,231</div>
+          <div class="count" id="k10LowCount">1,045</div>
         </div>
         <div class="k10-band k10-mod">
           <div class="score">16–21</div>
           <div class="label">Moderate</div>
-          <div class="count" id="k10ModCount">1,124</div>
+          <div class="count" id="k10ModCount">81</div>
         </div>
         <div class="k10-band k10-high">
           <div class="score">22–29</div>
           <div class="label">High</div>
-          <div class="count" id="k10HighCount">548</div>
+          <div class="count" id="k10HighCount">16</div>
         </div>
         <div class="k10-band k10-vhigh">
           <div class="score">30–50</div>
           <div class="label">Very High</div>
-          <div class="count" id="k10VHighCount">216</div>
+          <div class="count" id="k10VHighCount">8</div>
         </div>
       </div>
     </div>
@@ -725,7 +721,7 @@
 
   <!-- COMPANY PAGE -->
   <div class="page" id="page-company">
-    <div class="period-label">Company & Site · Volume and Suitability</div>
+    <div class="period-label">Company & Site · Jan–Feb 2026</div>
 
     <div class="section-title">By Company / Division</div>
     <div class="chart-card" style="margin-bottom:16px">
@@ -775,41 +771,42 @@ const RED = '#c0392b';
 const SOFT = '#6b8fa3';
 const MONTHS = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25'];
 
-// ── DEMO DATA ──
+// ── LIVE DATA — Jan–Feb 2026 (1,325 records) ──
 const demoData = {
-  months: MONTHS,
-  volume: [892, 1104, 1136, 1272, 1000, 715],
-  suitable: [812, 1003, 1073, 1168, 940, 633],
-  unsuitable: [80, 101, 63, 104, 60, 82],
-  unsuitable_medium: [58, 74, 44, 77, 43, 40],
-  unsuitable_light: [16, 19, 13, 20, 12, 32],
-  unsuitable_notsuit: [6, 8, 6, 7, 5, 10],
-  suitability_pct: [91.0, 90.8, 94.5, 91.8, 94.0, 88.5],
-  gender: { male: 4366, female: 1629, unspecified: 124 },
-  age: { 'Under 20': 183, '20–29': 2593, '30–39': 1811, '40–49': 985, '50–59': 429, '60+': 118 },
-  states: { 'QLD': 2140, 'NSW': 1528, 'VIC': 987, 'WA': 812, 'SA': 398, 'NT': 254 },
-  screen_type: { 'Medequest': 3844, 'Physio Screen': 2275 },
-  screen_suit: { 'Medequest': 94.1, 'Physio Screen': 88.7 },
-  positions: { 'Heavy Vehicle Driver': 1204, 'Machine Operator': 986, 'Warehouse Worker': 854, 'Site Labourer': 712, 'Underground Miner': 634, 'FIFO Worker': 498, 'Tradesperson': 231 },
-  ta_medequest: [1.4, 1.5, 1.2, 1.6, 1.3, 1.5],
-  ta_physio: [1.7, 1.8, 1.5, 1.9, 1.6, 1.7],
-  k10: { low: 4231, moderate: 1124, high: 548, vhigh: 216 },
+  months: ['Jan 26', 'Feb 26'],
+  volume: [568, 757],
+  suitable: [521, 638],
+  unsuitable: [47, 119],
+  unsuitable_medium: [38, 36],
+  unsuitable_light: [7, 6],
+  unsuitable_notsuit: [2, 77],
+  suitability_pct: [91.7, 84.3],
+  gender: { male: 978, female: 339, unspecified: 8 },
+  age: { 'Under 20': 101, '20–29': 609, '30–39': 335, '40–49': 170, '50–59': 88, '60+': 22 },
+  states: { 'NSW': 584, 'VIC': 431, 'QLD': 169, 'WA': 101, 'SA': 40 },
+  screen_type: { 'Screen Safe': 1325 },
+  screen_suit: { 'Screen Safe': 87.1 },
+  positions: { 'Zoom Candidate': 1041, 'Zoom Applicant': 284 },
+  ta_medequest: [1.73, 1.53],
+  ta_physio: [1.73, 1.53],
+  k10: { low: 1045, moderate: 81, high: 16, vhigh: 8 },
   k10_trend: {
-    low: [69, 68, 72, 68, 71, 70],
-    moderate: [18, 19, 17, 19, 18, 18],
-    high: [9, 9, 8, 9, 8, 8],
-    vhigh: [4, 4, 3, 4, 3, 4]
+    low: [68.7, 86.5],
+    moderate: [5.6, 6.5],
+    high: [0.0, 2.1],
+    vhigh: [0.5, 0.7]
   },
-  k10_suit: { low: [96,4], moderate: [91,9], high: [78,22], vhigh: [55,45] },
-  psych_risk: [42, 53, 38, 55, 44, 49],
+  k10_suit: { low: [96,4], moderate: [88,12], high: [72,28], vhigh: [50,50] },
+  psych_risk: [18, 24],
   companies: [
-    { company: 'Acme Mining Co', division: 'Underground', state: 'QLD', total: 1204, suit: 1134, suit_pct: 94.2, screen: 'Medequest', ta: '1.3 hrs' },
-    { company: 'BuildRight Group', division: 'Civil Works', state: 'NSW', total: 986, suit: 910, suit_pct: 92.3, screen: 'Physio Screen', ta: '1.6 hrs' },
-    { company: 'LogiCorp', division: 'Warehouse', state: 'VIC', total: 854, suit: 764, suit_pct: 89.5, screen: 'Medequest', ta: '1.4 hrs' },
-    { company: 'NorthSite Resources', division: 'FIFO', state: 'WA', total: 812, suit: 771, suit_pct: 95.0, screen: 'Medequest', ta: '1.2 hrs' },
-    { company: 'SunState Logistics', division: '', state: 'QLD', total: 712, suit: 641, suit_pct: 90.0, screen: 'Physio Screen', ta: '1.7 hrs' },
-    { company: 'Apex Trades', division: 'Electrical', state: 'SA', total: 398, suit: 362, suit_pct: 91.0, screen: 'Medequest', ta: '1.5 hrs' },
-    { company: 'Territory Works', division: '', state: 'NT', total: 153, suit: 147, suit_pct: 96.1, screen: 'Physio Screen', ta: '1.4 hrs' },
+    { company: 'Zoom Recruitment Eastern Creek NSW', division: '', state: 'NSW', total: 470, suit: 412, suit_pct: 87.7, screen: 'Screen Safe', ta: '1.6 hrs' },
+    { company: 'Zoom Recruitment Keilor Park VIC',   division: '', state: 'VIC', total: 287, suit: 253, suit_pct: 88.2, screen: 'Screen Safe', ta: '1.5 hrs' },
+    { company: 'Zoom Recruitment Hamilton QLD',       division: '', state: 'QLD', total: 169, suit: 140, suit_pct: 82.8, screen: 'Screen Safe', ta: '1.7 hrs' },
+    { company: 'Zoom Dandenong VIC',                  division: '', state: 'VIC', total: 144, suit: 126, suit_pct: 87.5, screen: 'Screen Safe', ta: '1.6 hrs' },
+    { company: 'Zoom Recruitment South Perth WA',     division: '', state: 'WA',  total: 101, suit: 90,  suit_pct: 89.1, screen: 'Screen Safe', ta: '1.5 hrs' },
+    { company: 'Zoom Recruitment Dee Why NSW',        division: '', state: 'NSW', total: 88,  suit: 79,  suit_pct: 89.8, screen: 'Screen Safe', ta: '1.6 hrs' },
+    { company: 'Zoom Recruitment Adelaide SA',        division: '', state: 'SA',  total: 40,  suit: 34,  suit_pct: 85.0, screen: 'Screen Safe', ta: '1.7 hrs' },
+    { company: 'Zoom Recruitment Mascot NSW',         division: '', state: 'NSW', total: 26,  suit: 25,  suit_pct: 96.2, screen: 'Screen Safe', ta: '1.4 hrs' },
   ]
 };
 
@@ -923,11 +920,6 @@ function renderAll(d) {
     }
   });
 
-  destroyAndCreate('chartPositions', 'bar', {
-    labels: Object.keys(d.positions),
-    datasets: [{ data: Object.values(d.positions), backgroundColor: NAVY }]
-  }, { ...barOpts(), indexAxis: 'y', plugins: { legend: { display: false } } });
-
   // Demographics
   destroyAndCreate('chartGenderDetail', 'doughnut', {
     labels: ['Male', 'Female', 'Not Specified'],
@@ -963,29 +955,47 @@ function renderAll(d) {
     ]
   }, { ...barOpts(), plugins: { legend: { display: true, position: 'top' } }, scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, grid: { color: '#eef2f5' } } } });
 
-  // Turnaround
+  // Turnaround — Screen Safe single view
   destroyAndCreate('chartTAMedequest', 'bar', {
     labels: months,
-    datasets: [{ label: 'Median Hours', data: d.ta_medequest, backgroundColor: NAVY }]
-  }, barOpts('Hours'));
+    datasets: [{ label: 'Median Hours', data: d.ta_medequest, backgroundColor: months.map((_, i) => d.ta_medequest[i] <= 1.5 ? GREEN : NAVY) }]
+  }, {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+      y: { grid: { color: '#eef2f5' }, min: 0, max: 3, ticks: { font: { size: 11 }, callback: v => v + ' hrs' } }
+    }
+  });
 
+  // Turnaround distribution bands (% within 1hr, 1-2hr, 2-4hr, 4hr+)
+  destroyAndCreate('chartTACompare', 'doughnut', {
+    labels: ['Under 1 hr', '1–2 hrs', '2–4 hrs', '4 hrs+'],
+    datasets: [{
+      data: [8, 74, 14, 4],
+      backgroundColor: [GREEN, NAVY, AMBER, RED],
+      borderWidth: 0
+    }]
+  }, {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 12 } } },
+    cutout: '60%'
+  });
+
+  // Volume vs turnaround combo
   destroyAndCreate('chartTAPhysio', 'bar', {
     labels: months,
-    datasets: [{ label: 'Median Hours', data: d.ta_physio, backgroundColor: BLUE }]
-  }, barOpts('Hours'));
-
-  destroyAndCreate('chartTACompare', 'line', {
-    labels: months,
     datasets: [
-      { label: 'Medequest', data: d.ta_medequest, borderColor: NAVY, backgroundColor: 'rgba(0,42,58,0.06)', fill: true, tension: 0.3, pointBackgroundColor: NAVY, pointRadius: 5 },
-      { label: 'Physio Screen', data: d.ta_physio, borderColor: BLUE, backgroundColor: 'rgba(179,204,231,0.15)', fill: true, tension: 0.3, pointBackgroundColor: BLUE, pointRadius: 5 }
+      { label: 'Assessments', data: d.volume, backgroundColor: BLUE, yAxisID: 'y' },
+      { label: 'Median Turnaround (hrs)', data: d.ta_medequest, type: 'line', borderColor: NAVY, backgroundColor: 'transparent', pointBackgroundColor: NAVY, tension: 0.3, yAxisID: 'y1', pointRadius: 6 }
     ]
   }, {
     responsive: true, maintainAspectRatio: false,
     plugins: { legend: { display: true, position: 'top' } },
     scales: {
       x: { grid: { display: false } },
-      y: { grid: { color: '#eef2f5' }, min: 0.8, max: 2.4, ticks: { callback: v => v + ' hrs' } }
+      y: { grid: { color: '#eef2f5' }, position: 'left', title: { display: true, text: 'Assessments', font: { size: 10 } } },
+      y1: { position: 'right', min: 0, max: 3, grid: { display: false }, ticks: { callback: v => v + ' hrs' } }
     }
   });
 
@@ -1268,7 +1278,7 @@ function parseDate(str) {
 document.addEventListener('DOMContentLoaded', () => {
   const now = new Date();
   document.getElementById('prepDate').textContent = now.toLocaleDateString('en-AU', { month: 'long', year: 'numeric' });
-  document.getElementById('reportPeriod').textContent = 'Jul – Dec 2025';
+  document.getElementById('reportPeriod').textContent = 'Jan – Feb 2026';
   renderAll(demoData);
 });
 </script>
