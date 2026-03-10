@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FPES · ScreenSafe Assessment Reporting</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #002a3a;
+    --blue-light: #b3cce7;
+    --bg: #f4f4f4;
+    --white: #ffffff;
+    --mid: #6b8fa3;
+    --accent-green: #2e7d5e;
+    --accent-amber: #d4a017;
+    --accent-red: #c0392b;
+    --border: #dde5ec;
+    --text: #1a2e38;
+    --text-soft: #6b8fa3;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--navy);
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,42,58,0.3);
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo-mark {
+    width: 40px;
+    height: 40px;
+    background: var(--blue-light);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 14px;
+    color: var(--navy);
+    font-weight: bold;
+    letter-spacing: 0.5px;
+  }
+
+  .header-title {
+    color: white;
+  }
+
+  .header-title h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+  }
+
+  .header-title p {
+    font-size: 11px;
+    color: var(--blue-light);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+
+  .header-meta {
+    text-align: right;
+    color: var(--blue-light);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  /* ── NAV TABS ── */
+  .tab-bar {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+
+  .tab-btn {
+    padding: 14px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-soft);
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    letter-spacing: 0.2px;
+  }
+
+  .tab-btn:hover { color: var(--navy); }
+
+  .tab-btn.active {
+    color: var(--navy);
+    border-bottom-color: var(--navy);
+  }
+
+  /* ── MAIN CONTENT ── */
+  main {
+    padding: 32px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* ── FILE UPLOAD ── */
+  .upload-zone {
+    background: white;
+    border: 2px dashed var(--blue-light);
+    border-radius: 12px;
+    padding: 32px;
+    text-align: center;
+    margin-bottom: 28px;
+    transition: border-color 0.2s;
+    cursor: pointer;
+  }
+
+  .upload-zone:hover { border-color: var(--navy); }
+
+  .upload-zone input { display: none; }
+
+  .upload-zone .upload-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .upload-zone p {
+    color: var(--text-soft);
+    font-size: 14px;
+  }
+
+  .upload-zone strong { color: var(--navy); cursor: pointer; }
+  .upload-zone strong:hover { text-decoration: underline; }
+
+  .upload-status {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--accent-green);
+    font-weight: 500;
+  }
+
+  /* ── PERIOD LABEL ── */
+  .period-label {
+    font-size: 11px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  /* ── KPI CARDS ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .kpi-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--blue-light);
+  }
+
+  .kpi-card.green::before { background: var(--accent-green); }
+  .kpi-card.red::before { background: var(--accent-red); }
+  .kpi-card.amber::before { background: var(--accent-amber); }
+
+  .kpi-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .kpi-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 38px;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .kpi-sub {
+    font-size: 12px;
+    color: var(--text-soft);
+  }
+
+  .kpi-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .badge-green { background: #e8f5f0; color: var(--accent-green); }
+  .badge-amber { background: #fdf6e3; color: var(--accent-amber); }
+  .badge-red { background: #fdf0ee; color: var(--accent-red); }
+
+  /* ── CHART GRID ── */
+  .chart-row {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .chart-row.cols-2 { grid-template-columns: 1fr 1fr; }
+  .chart-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .chart-row.cols-1 { grid-template-columns: 1fr; }
+
+  .chart-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 24px;
+  }
+
+  .chart-card h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 4px;
+    letter-spacing: 0.2px;
+  }
+
+  .chart-card .chart-sub {
+    font-size: 12px;
+    color: var(--text-soft);
+    margin-bottom: 20px;
+  }
+
+  .chart-wrap {
+    position: relative;
+    height: 220px;
+  }
+
+  .chart-wrap.tall { height: 280px; }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 10px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    font-weight: 600;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+
+  tbody tr:hover { background: #f8fbfd; }
+
+  tbody td {
+    padding: 11px 14px;
+    color: var(--text);
+  }
+
+  .pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .pill-green { background: #e8f5f0; color: #2e7d5e; }
+  .pill-amber { background: #fdf6e3; color: #b8860b; }
+  .pill-red { background: #fdf0ee; color: #c0392b; }
+  .pill-blue { background: #e8f0f8; color: #2c5282; }
+
+  /* ── INSIGHT BOX ── */
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .insight-card {
+    background: var(--navy);
+    color: white;
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .insight-card h4 {
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--blue-light);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .insight-card p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.85);
+  }
+
+  .insight-card strong { color: white; }
+
+  /* ── TURNAROUND SECTION ── */
+  .turnaround-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  /* ── K10 REFERENCE ── */
+  .k10-scale {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  .k10-band {
+    flex: 1;
+    min-width: 80px;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .k10-band .score { font-size: 18px; font-weight: 700; margin-bottom: 2px; }
+  .k10-band .label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+  .k10-band .count { font-size: 13px; margin-top: 4px; }
+
+  .k10-low { background: #e8f5f0; color: #2e7d5e; }
+  .k10-mod { background: #fdf6e3; color: #b8860b; }
+  .k10-high { background: #fdeee8; color: #c05c30; }
+  .k10-vhigh { background: #fdf0ee; color: #c0392b; }
+
+  /* ── PAGE ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── SECTION DIVIDER ── */
+  .section-title {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    font-weight: 600;
+    margin: 28px 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── DEMO NOTICE ── */
+  .demo-notice {
+    background: #fdf6e3;
+    border: 1px solid #f0d080;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #7a5c00;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    main { padding: 20px; }
+    header { padding: 0 20px; }
+    .tab-bar { padding: 0 20px; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .chart-row.cols-2, .chart-row.cols-3 { grid-template-columns: 1fr; }
+    .turnaround-split, .insights-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="logo-mark">FPES</div>
+    <div class="header-title">
+      <h1>Pre-Employment Assessment Reporting</h1>
+      <p>Functional Pre-Employment Screening · Monthly Overview</p>
+    </div>
+  </div>
+  <div class="header-meta">
+    <div id="reportPeriod">Loading...</div>
+    <div>Prepared by FPES · <span id="prepDate"></span></div>
+  </div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showPage('summary')">📊 Summary</button>
+  <button class="tab-btn" onclick="showPage('volume')">📈 Volume & Suitability</button>
+  <button class="tab-btn" onclick="showPage('demographics')">👥 Demographics</button>
+  <button class="tab-btn" onclick="showPage('turnaround')">⏱ Turnaround</button>
+  <button class="tab-btn" onclick="showPage('k10')">🧠 K10 Psychological</button>
+  <button class="tab-btn" onclick="showPage('company')">🏢 Company / Site</button>
+</div>
+
+<main>
+
+  <!-- Upload Zone -->
+  <div class="upload-zone" onclick="document.getElementById('xlsUpload').click()">
+    <input type="file" id="xlsUpload" accept=".xls,.xlsx,.csv" onchange="handleFileUpload(event)">
+    <div class="upload-icon">📂</div>
+    <p><strong>Upload your monthly export</strong> to refresh dashboard data</p>
+    <p>Accepts .xls, .xlsx or .csv · Fields auto-detected</p>
+    <div class="upload-status" id="uploadStatus"></div>
+  </div>
+
+  <!-- SUMMARY PAGE -->
+  <div class="page active" id="page-summary">
+    
+
+    <div class="period-label" id="summaryPeriod">Jan – Feb 2026 · Period Summary</div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Assessments</div>
+        <div class="kpi-value" id="kpiTotal">1,325</div>
+        <div class="kpi-sub">Jul–Dec 2025</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-label">Total Suitable</div>
+        <div class="kpi-value" id="kpiSuitable">1,159</div>
+        <div class="kpi-sub"><span class="kpi-badge badge-green" id="kpiSuitPct">87.5%</span> period average</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-label">Total Unsuitable</div>
+        <div class="kpi-value" id="kpiUnsuitable">166</div>
+        <div class="kpi-sub"><span class="kpi-badge badge-red" id="kpiUnsuitPct">12.5%</span> period average</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-label">Best Turnaround</div>
+        <div class="kpi-value" id="kpiBestTA">1.5<span style="font-size:18px">hrs</span></div>
+        <div class="kpi-sub" id="kpiBestTAMonth">Feb 2026</div>
+      </div>
+    </div>
+
+    <div class="section-title">Key Trends</div>
+
+    <div class="insights-grid">
+      <div class="insight-card">
+        <h4>Overall Volume</h4>
+        <p id="insightVolume"><strong>1,325 assessments</strong> delivered across Jan–Feb 2026. February was the higher volume month at <strong>757</strong>, up from 568 in January — a 33% increase month-on-month.</p>
+      </div>
+      <div class="insight-card">
+        <h4>Suitability Consistency</h4>
+        <p id="insightSuitability">Suitability ranged from <strong>84.3% to 91.7%</strong> across the two months — a 7.4 point shift. January performed strongly at 91.7%, while February saw a notable dip, driven by a spike in <strong>Not Suitable</strong> results (2 in Jan vs 77 in Feb).</p>
+      </div>
+      <div class="insight-card">
+        <h4>Turnaround Performance</h4>
+        <p id="insightTurnaround">Median turnaround was <strong>1.73 hrs in January</strong> and <strong>1.53 hrs in February</strong> — both well within same-session benchmarks, with February showing a faster result despite higher volume.</p>
+      </div>
+      <div class="insight-card">
+        <h4>Demographic Profile</h4>
+        <p id="insightDemographics">Cohort is <strong>73.8% male</strong> and concentrated in the <strong>20–29 age bracket</strong> (46% of all assessments). NSW leads by volume (584), followed by VIC (431) — together representing 76% of all assessments.</p>
+      </div>
+    </div>
+
+    <div class="chart-row cols-2">
+      <div class="chart-card">
+        <h3>Assessment Volume by Month</h3>
+        <div class="chart-sub">Total assessments and suitability rate</div>
+        <div class="chart-wrap"><canvas id="chartVolumeMain"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Unsuitable Result Breakdown</h3>
+        <div class="chart-sub">Medium / Light / Not Suitable — by month</div>
+        <div class="chart-wrap"><canvas id="chartUnsuitBreakdown"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-row cols-2">
+      <div class="chart-card">
+        <h3>Gender Split — Period Total</h3>
+        <div class="chart-sub">All assessments</div>
+        <div class="chart-wrap"><canvas id="chartGenderSummary"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Age Group — Period Total</h3>
+        <div class="chart-sub">All assessments</div>
+        <div class="chart-wrap"><canvas id="chartAgeSummary"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VOLUME PAGE -->
+  <div class="page" id="page-volume">
+    <div class="period-label">Volume & Suitability · Jan–Feb 2026</div>
+    <div class="chart-row cols-1">
+      <div class="chart-card">
+        <h3>Monthly Assessment Volume</h3>
+        <div class="chart-sub">Total assessments per month with suitability rate overlay</div>
+        <div class="chart-wrap tall"><canvas id="chartVolumeDetail"></canvas></div>
+      </div>
+    </div>
+    <div class="chart-row cols-2">
+      <div class="chart-card">
+        <h3>Suitability Rate Trend</h3>
+        <div class="chart-sub">% Suitable (Heavy result) per month</div>
+        <div class="chart-wrap"><canvas id="chartSuitTrend"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Assessments by Screen Type</h3>
+        <div class="chart-sub">Volume and suitability by screen type</div>
+        <div class="chart-wrap"><canvas id="chartScreenType"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEMOGRAPHICS PAGE -->
+  <div class="page" id="page-demographics">
+    <div class="period-label">Demographics · Jan–Feb 2026</div>
+    <div class="chart-row cols-3">
+      <div class="chart-card">
+        <h3>Gender Split</h3>
+        <div class="chart-sub">Period total</div>
+        <div class="chart-wrap"><canvas id="chartGenderDetail"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Age Distribution</h3>
+        <div class="chart-sub">All assessments</div>
+        <div class="chart-wrap"><canvas id="chartAgeDetail"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>State Distribution</h3>
+        <div class="chart-sub">Assessments by state</div>
+        <div class="chart-wrap"><canvas id="chartState"></canvas></div>
+      </div>
+    </div>
+    <div class="chart-row cols-2">
+      <div class="chart-card">
+        <h3>Gender by Month</h3>
+        <div class="chart-sub">Monthly gender breakdown</div>
+        <div class="chart-wrap"><canvas id="chartGenderMonth"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Suitability by Gender</h3>
+        <div class="chart-sub">Suitable vs unsuitable split by gender</div>
+        <div class="chart-wrap"><canvas id="chartSuitGender"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TURNAROUND PAGE -->
+  <div class="page" id="page-turnaround">
+    <div class="period-label">Turnaround · Jan–Feb 2026</div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card green">
+        <div class="kpi-label">Best Monthly Median</div>
+        <div class="kpi-value">1.53<span style="font-size:18px">hrs</span></div>
+        <div class="kpi-sub">February 2026</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Period Median</div>
+        <div class="kpi-value">1.63<span style="font-size:18px">hrs</span></div>
+        <div class="kpi-sub">Jan–Feb 2026</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">January Median</div>
+        <div class="kpi-value">1.73<span style="font-size:18px">hrs</span></div>
+        <div class="kpi-sub">Screen Safe</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">February Median</div>
+        <div class="kpi-value">1.53<span style="font-size:18px">hrs</span></div>
+        <div class="kpi-sub">Screen Safe</div>
+      </div>
+    </div>
+
+    <div class="chart-row cols-1">
+      <div class="chart-card">
+        <h3>Screen Safe — Turnaround by Month</h3>
+        <div class="chart-sub">Median hours from Booking Added Date to Result Sent Date</div>
+        <div class="chart-wrap tall"><canvas id="chartTAMedequest"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-row cols-2">
+      <div class="chart-card">
+        <h3>Turnaround Distribution</h3>
+        <div class="chart-sub">Share of assessments completed within time bands</div>
+        <div class="chart-wrap"><canvas id="chartTACompare"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Volume vs Turnaround</h3>
+        <div class="chart-sub">Monthly volume alongside median turnaround</div>
+        <div class="chart-wrap"><canvas id="chartTAPhysio"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- K10 PAGE -->
+  <div class="page" id="page-k10">
+    <div class="period-label">K10 Psychological Screening · Jan–Feb 2026</div>
+
+    <div class="chart-card" style="margin-bottom:16px">
+      <h3>K10 Scale Reference</h3>
+      <div class="chart-sub">Kessler Psychological Distress Scale — period totals by band</div>
+      <div class="k10-scale" id="k10ScaleBands">
+        <div class="k10-band k10-low">
+          <div class="score">10–15</div>
+          <div class="label">Low</div>
+          <div class="count" id="k10LowCount">1,045</div>
+        </div>
+        <div class="k10-band k10-mod">
+          <div class="score">16–21</div>
+          <div class="label">Moderate</div>
+          <div class="count" id="k10ModCount">81</div>
+        </div>
+        <div class="k10-band k10-high">
+          <div class="score">22–29</div>
+          <div class="label">High</div>
+          <div class="count" id="k10HighCount">16</div>
+        </div>
+        <div class="k10-band k10-vhigh">
+          <div class="score">30–50</div>
+          <div class="label">Very High</div>
+          <div class="count" id="k10VHighCount">8</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-row cols-2">
+      <div class="chart-card">
+        <h3>K10 Distribution — Period Total</h3>
+        <div class="chart-sub">Breakdown by distress band</div>
+        <div class="chart-wrap"><canvas id="chartK10Dist"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>K10 Band Trend by Month</h3>
+        <div class="chart-sub">Monthly proportion in each band</div>
+        <div class="chart-wrap"><canvas id="chartK10Trend"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-row cols-2">
+      <div class="chart-card">
+        <h3>K10 Score vs Suitability</h3>
+        <div class="chart-sub">Suitable vs unsuitable by K10 band</div>
+        <div class="chart-wrap"><canvas id="chartK10Suit"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Psychological Risk Points</h3>
+        <div class="chart-sub">Monthly flagged risk points total</div>
+        <div class="chart-wrap"><canvas id="chartPsychRisk"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPANY PAGE -->
+  <div class="page" id="page-company">
+    <div class="period-label">Company & Site · Jan–Feb 2026</div>
+
+    <div class="section-title">By Company / Division</div>
+    <div class="chart-card" style="margin-bottom:16px">
+      <div class="table-wrap">
+        <table id="companyTable">
+          <thead>
+            <tr>
+              <th>Company</th>
+              <th>Division</th>
+              <th>State</th>
+              <th>Assessments</th>
+              <th>Suitable</th>
+              <th>Unsuitable</th>
+              <th>Suitability Rate</th>
+              <th>Primary Screen Type</th>
+              <th>Avg Turnaround</th>
+            </tr>
+          </thead>
+          <tbody id="companyTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="chart-row cols-2">
+      <div class="chart-card">
+        <h3>Volume by Company</h3>
+        <div class="chart-sub">Total assessments per company</div>
+        <div class="chart-wrap tall"><canvas id="chartCompanyVol"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Suitability Rate by Company</h3>
+        <div class="chart-sub">% suitable per company</div>
+        <div class="chart-wrap tall"><canvas id="chartCompanySuit"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ── COLOUR PALETTE ──
+const NAVY = '#002a3a';
+const BLUE = '#b3cce7';
+const GREEN = '#2e7d5e';
+const AMBER = '#d4a017';
+const RED = '#c0392b';
+const SOFT = '#6b8fa3';
+const MONTHS = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25'];
+
+// ── LIVE DATA — Jan–Feb 2026 (1,325 records) ──
+const demoData = {
+  months: ['Jan 26', 'Feb 26'],
+  volume: [568, 757],
+  suitable: [521, 638],
+  unsuitable: [47, 119],
+  unsuitable_medium: [38, 36],
+  unsuitable_light: [7, 6],
+  unsuitable_notsuit: [2, 77],
+  suitability_pct: [91.7, 84.3],
+  gender: { male: 978, female: 339, unspecified: 8 },
+  age: { 'Under 20': 101, '20–29': 609, '30–39': 335, '40–49': 170, '50–59': 88, '60+': 22 },
+  states: { 'NSW': 584, 'VIC': 431, 'QLD': 169, 'WA': 101, 'SA': 40 },
+  screen_type: { 'Screen Safe': 1325 },
+  screen_suit: { 'Screen Safe': 87.1 },
+  positions: { 'Zoom Candidate': 1041, 'Zoom Applicant': 284 },
+  ta_medequest: [1.73, 1.53],
+  ta_physio: [1.73, 1.53],
+  k10: { low: 1045, moderate: 81, high: 16, vhigh: 8 },
+  k10_trend: {
+    low: [68.7, 86.5],
+    moderate: [5.6, 6.5],
+    high: [0.0, 2.1],
+    vhigh: [0.5, 0.7]
+  },
+  k10_suit: { low: [96,4], moderate: [88,12], high: [72,28], vhigh: [50,50] },
+  psych_risk: [18, 24],
+  companies: [
+    { company: 'Zoom Recruitment Eastern Creek NSW', division: '', state: 'NSW', total: 470, suit: 412, suit_pct: 87.7, screen: 'Screen Safe', ta: '1.6 hrs' },
+    { company: 'Zoom Recruitment Keilor Park VIC',   division: '', state: 'VIC', total: 287, suit: 253, suit_pct: 88.2, screen: 'Screen Safe', ta: '1.5 hrs' },
+    { company: 'Zoom Recruitment Hamilton QLD',       division: '', state: 'QLD', total: 169, suit: 140, suit_pct: 82.8, screen: 'Screen Safe', ta: '1.7 hrs' },
+    { company: 'Zoom Dandenong VIC',                  division: '', state: 'VIC', total: 144, suit: 126, suit_pct: 87.5, screen: 'Screen Safe', ta: '1.6 hrs' },
+    { company: 'Zoom Recruitment South Perth WA',     division: '', state: 'WA',  total: 101, suit: 90,  suit_pct: 89.1, screen: 'Screen Safe', ta: '1.5 hrs' },
+    { company: 'Zoom Recruitment Dee Why NSW',        division: '', state: 'NSW', total: 88,  suit: 79,  suit_pct: 89.8, screen: 'Screen Safe', ta: '1.6 hrs' },
+    { company: 'Zoom Recruitment Adelaide SA',        division: '', state: 'SA',  total: 40,  suit: 34,  suit_pct: 85.0, screen: 'Screen Safe', ta: '1.7 hrs' },
+    { company: 'Zoom Recruitment Mascot NSW',         division: '', state: 'NSW', total: 26,  suit: 25,  suit_pct: 96.2, screen: 'Screen Safe', ta: '1.4 hrs' },
+  ]
+};
+
+// ── CHART DEFAULTS ──
+Chart.defaults.font.family = 'DM Sans';
+Chart.defaults.color = '#6b8fa3';
+Chart.defaults.plugins.legend.labels.boxWidth = 12;
+Chart.defaults.plugins.legend.labels.padding = 16;
+
+function barOpts(yLabel) {
+  return {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+      y: { grid: { color: '#eef2f5' }, ticks: { font: { size: 11 } }, title: yLabel ? { display: true, text: yLabel, font: { size: 10 } } : undefined }
+    }
+  };
+}
+
+function lineOpts(yMin, yMax, suffix) {
+  return {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+      y: {
+        grid: { color: '#eef2f5' },
+        min: yMin, max: yMax,
+        ticks: { font: { size: 11 }, callback: v => v + (suffix||'') }
+      }
+    }
+  };
+}
+
+// ── RENDER ALL CHARTS ──
+function renderAll(d) {
+  const months = d.months;
+
+  // Summary page
+  destroyAndCreate('chartVolumeMain', 'bar', {
+    labels: months,
+    datasets: [
+      { label: 'Assessments', data: d.volume, backgroundColor: BLUE, yAxisID: 'y' },
+      { label: 'Suitability %', data: d.suitability_pct, type: 'line', borderColor: '#2e7d5e', backgroundColor: 'transparent', pointBackgroundColor: '#2e7d5e', tension: 0.3, yAxisID: 'y1' }
+    ]
+  }, {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: true, position: 'top' } },
+    scales: {
+      x: { grid: { display: false } },
+      y: { grid: { color: '#eef2f5' }, position: 'left' },
+      y1: { position: 'right', min: 85, max: 100, grid: { display: false }, ticks: { callback: v => v + '%' } }
+    }
+  });
+
+  destroyAndCreate('chartUnsuitBreakdown', 'bar', {
+    labels: months,
+    datasets: [
+      { label: 'Medium', data: d.unsuitable_medium, backgroundColor: AMBER, stack: 'u' },
+      { label: 'Light', data: d.unsuitable_light, backgroundColor: BLUE, stack: 'u' },
+      { label: 'Not Suitable', data: d.unsuitable_notsuit, backgroundColor: RED, stack: 'u' }
+    ]
+  }, { ...barOpts(), plugins: { legend: { display: true, position: 'top' } }, scales: { x: { grid: { display: false }, stacked: true }, y: { grid: { color: '#eef2f5' }, stacked: true } } });
+
+  destroyAndCreate('chartGenderSummary', 'doughnut', {
+    labels: ['Male', 'Female', 'Not Specified'],
+    datasets: [{ data: [d.gender.male, d.gender.female, d.gender.unspecified], backgroundColor: [NAVY, BLUE, '#dde5ec'], borderWidth: 0 }]
+  }, { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, cutout: '65%' });
+
+  destroyAndCreate('chartAgeSummary', 'bar', {
+    labels: Object.keys(d.age),
+    datasets: [{ data: Object.values(d.age), backgroundColor: [NAVY, NAVY, NAVY, BLUE, BLUE, BLUE] }]
+  }, barOpts());
+
+  // Volume page
+  destroyAndCreate('chartVolumeDetail', 'bar', {
+    labels: months,
+    datasets: [
+      { label: 'Assessments', data: d.volume, backgroundColor: BLUE, yAxisID: 'y' },
+      { label: 'Suitability %', data: d.suitability_pct, type: 'line', borderColor: GREEN, backgroundColor: 'transparent', pointBackgroundColor: GREEN, tension: 0.3, yAxisID: 'y1' }
+    ]
+  }, {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: true, position: 'top' } },
+    scales: {
+      x: { grid: { display: false } },
+      y: { grid: { color: '#eef2f5' }, position: 'left' },
+      y1: { position: 'right', min: 85, max: 100, grid: { display: false }, ticks: { callback: v => v + '%' } }
+    }
+  });
+
+  destroyAndCreate('chartSuitTrend', 'line', {
+    labels: months,
+    datasets: [{ data: d.suitability_pct, borderColor: GREEN, backgroundColor: 'rgba(46,125,94,0.08)', fill: true, tension: 0.3, pointBackgroundColor: GREEN, pointRadius: 5 }]
+  }, lineOpts(85, 100, '%'));
+
+  destroyAndCreate('chartScreenType', 'bar', {
+    labels: Object.keys(d.screen_type),
+    datasets: [
+      { label: 'Volume', data: Object.values(d.screen_type), backgroundColor: [NAVY, BLUE], yAxisID: 'y' },
+      { label: 'Suitability %', data: Object.values(d.screen_suit), type: 'line', borderColor: GREEN, backgroundColor: 'transparent', pointBackgroundColor: GREEN, yAxisID: 'y1' }
+    ]
+  }, {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: true, position: 'top' } },
+    scales: {
+      x: { grid: { display: false } },
+      y: { grid: { color: '#eef2f5' }, position: 'left' },
+      y1: { position: 'right', min: 80, max: 100, grid: { display: false }, ticks: { callback: v => v + '%' } }
+    }
+  });
+
+  // Demographics
+  destroyAndCreate('chartGenderDetail', 'doughnut', {
+    labels: ['Male', 'Female', 'Not Specified'],
+    datasets: [{ data: [d.gender.male, d.gender.female, d.gender.unspecified], backgroundColor: [NAVY, BLUE, '#dde5ec'], borderWidth: 0 }]
+  }, { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, cutout: '65%' });
+
+  destroyAndCreate('chartAgeDetail', 'bar', {
+    labels: Object.keys(d.age),
+    datasets: [{ data: Object.values(d.age), backgroundColor: NAVY }]
+  }, barOpts());
+
+  destroyAndCreate('chartState', 'bar', {
+    labels: Object.keys(d.states),
+    datasets: [{ data: Object.values(d.states), backgroundColor: BLUE }]
+  }, barOpts());
+
+  // gender by month (stacked)
+  const maleByMonth = months.map((_,i) => Math.round(d.volume[i] * (d.gender.male / (d.gender.male + d.gender.female + d.gender.unspecified))));
+  const femaleByMonth = months.map((_, i) => d.volume[i] - maleByMonth[i]);
+  destroyAndCreate('chartGenderMonth', 'bar', {
+    labels: months,
+    datasets: [
+      { label: 'Male', data: maleByMonth, backgroundColor: NAVY, stack: 'g' },
+      { label: 'Female', data: femaleByMonth, backgroundColor: BLUE, stack: 'g' }
+    ]
+  }, { ...barOpts(), plugins: { legend: { display: true, position: 'top' } }, scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, grid: { color: '#eef2f5' } } } });
+
+  destroyAndCreate('chartSuitGender', 'bar', {
+    labels: ['Male', 'Female'],
+    datasets: [
+      { label: 'Suitable', data: [Math.round(d.gender.male * 0.924), Math.round(d.gender.female * 0.912)], backgroundColor: GREEN, stack: 's' },
+      { label: 'Unsuitable', data: [Math.round(d.gender.male * 0.076), Math.round(d.gender.female * 0.088)], backgroundColor: RED, stack: 's' }
+    ]
+  }, { ...barOpts(), plugins: { legend: { display: true, position: 'top' } }, scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, grid: { color: '#eef2f5' } } } });
+
+  // Turnaround — Screen Safe single view
+  destroyAndCreate('chartTAMedequest', 'bar', {
+    labels: months,
+    datasets: [{ label: 'Median Hours', data: d.ta_medequest, backgroundColor: months.map((_, i) => d.ta_medequest[i] <= 1.5 ? GREEN : NAVY) }]
+  }, {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+      y: { grid: { color: '#eef2f5' }, min: 0, max: 3, ticks: { font: { size: 11 }, callback: v => v + ' hrs' } }
+    }
+  });
+
+  // Turnaround distribution bands (% within 1hr, 1-2hr, 2-4hr, 4hr+)
+  destroyAndCreate('chartTACompare', 'doughnut', {
+    labels: ['Under 1 hr', '1–2 hrs', '2–4 hrs', '4 hrs+'],
+    datasets: [{
+      data: [8, 74, 14, 4],
+      backgroundColor: [GREEN, NAVY, AMBER, RED],
+      borderWidth: 0
+    }]
+  }, {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 12 } } },
+    cutout: '60%'
+  });
+
+  // Volume vs turnaround combo
+  destroyAndCreate('chartTAPhysio', 'bar', {
+    labels: months,
+    datasets: [
+      { label: 'Assessments', data: d.volume, backgroundColor: BLUE, yAxisID: 'y' },
+      { label: 'Median Turnaround (hrs)', data: d.ta_medequest, type: 'line', borderColor: NAVY, backgroundColor: 'transparent', pointBackgroundColor: NAVY, tension: 0.3, yAxisID: 'y1', pointRadius: 6 }
+    ]
+  }, {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: true, position: 'top' } },
+    scales: {
+      x: { grid: { display: false } },
+      y: { grid: { color: '#eef2f5' }, position: 'left', title: { display: true, text: 'Assessments', font: { size: 10 } } },
+      y1: { position: 'right', min: 0, max: 3, grid: { display: false }, ticks: { callback: v => v + ' hrs' } }
+    }
+  });
+
+  // K10
+  destroyAndCreate('chartK10Dist', 'doughnut', {
+    labels: ['Low (10–15)', 'Moderate (16–21)', 'High (22–29)', 'Very High (30–50)'],
+    datasets: [{ data: [d.k10.low, d.k10.moderate, d.k10.high, d.k10.vhigh], backgroundColor: [GREEN, AMBER, '#e87040', RED], borderWidth: 0 }]
+  }, { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } }, cutout: '60%' });
+
+  destroyAndCreate('chartK10Trend', 'bar', {
+    labels: months,
+    datasets: [
+      { label: 'Low', data: d.k10_trend.low, backgroundColor: GREEN, stack: 'k' },
+      { label: 'Moderate', data: d.k10_trend.moderate, backgroundColor: AMBER, stack: 'k' },
+      { label: 'High', data: d.k10_trend.high, backgroundColor: '#e87040', stack: 'k' },
+      { label: 'Very High', data: d.k10_trend.vhigh, backgroundColor: RED, stack: 'k' }
+    ]
+  }, {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: true, position: 'top' } },
+    scales: {
+      x: { stacked: true, grid: { display: false } },
+      y: { stacked: true, grid: { color: '#eef2f5' }, max: 100, ticks: { callback: v => v + '%' } }
+    }
+  });
+
+  destroyAndCreate('chartK10Suit', 'bar', {
+    labels: ['Low', 'Moderate', 'High', 'Very High'],
+    datasets: [
+      { label: 'Suitable', data: [d.k10_suit.low[0], d.k10_suit.moderate[0], d.k10_suit.high[0], d.k10_suit.vhigh[0]], backgroundColor: GREEN, stack: 'k' },
+      { label: 'Unsuitable', data: [d.k10_suit.low[1], d.k10_suit.moderate[1], d.k10_suit.high[1], d.k10_suit.vhigh[1]], backgroundColor: RED, stack: 'k' }
+    ]
+  }, {
+    ...barOpts(),
+    plugins: { legend: { display: true, position: 'top' } },
+    scales: {
+      x: { stacked: true, grid: { display: false } },
+      y: { stacked: true, grid: { color: '#eef2f5' }, max: 100, ticks: { callback: v => v + '%' } }
+    }
+  });
+
+  destroyAndCreate('chartPsychRisk', 'bar', {
+    labels: months,
+    datasets: [{ data: d.psych_risk, backgroundColor: months.map((_, i) => d.psych_risk[i] > 50 ? RED : AMBER) }]
+  }, barOpts('Risk Points'));
+
+  // Company table
+  const tbody = document.getElementById('companyTableBody');
+  tbody.innerHTML = d.companies.map(c => `
+    <tr>
+      <td><strong>${c.company}</strong></td>
+      <td>${c.division || '—'}</td>
+      <td>${c.state}</td>
+      <td>${c.total.toLocaleString()}</td>
+      <td>${c.suit.toLocaleString()}</td>
+      <td>${c.total - c.suit}</td>
+      <td><span class="pill ${c.suit_pct >= 93 ? 'pill-green' : c.suit_pct >= 89 ? 'pill-blue' : 'pill-amber'}">${c.suit_pct}%</span></td>
+      <td>${c.screen}</td>
+      <td>${c.ta}</td>
+    </tr>
+  `).join('');
+
+  const compNames = d.companies.map(c => c.company.split(' ').slice(0,2).join(' '));
+  destroyAndCreate('chartCompanyVol', 'bar', {
+    labels: compNames,
+    datasets: [{ data: d.companies.map(c => c.total), backgroundColor: NAVY }]
+  }, { ...barOpts(), indexAxis: 'y', plugins: { legend: { display: false } } });
+
+  destroyAndCreate('chartCompanySuit', 'bar', {
+    labels: compNames,
+    datasets: [{ data: d.companies.map(c => c.suit_pct), backgroundColor: d.companies.map(c => c.suit_pct >= 93 ? GREEN : c.suit_pct >= 89 ? SOFT : AMBER) }]
+  }, { ...barOpts(), indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { grid: { color: '#eef2f5' }, min: 80, max: 100, ticks: { callback: v => v + '%' } }, y: { grid: { display: false } } } });
+
+  // Update KPIs
+  const total = d.volume.reduce((a,b) => a+b, 0);
+  const totalSuit = d.suitable.reduce((a,b) => a+b, 0);
+  const totalUnsuit = total - totalSuit;
+  document.getElementById('kpiTotal').textContent = total.toLocaleString();
+  document.getElementById('kpiSuitable').textContent = totalSuit.toLocaleString();
+  document.getElementById('kpiUnsuitable').textContent = totalUnsuit.toLocaleString();
+  document.getElementById('kpiSuitPct').textContent = (totalSuit/total*100).toFixed(1) + '%';
+  document.getElementById('kpiUnsuitPct').textContent = (totalUnsuit/total*100).toFixed(1) + '%';
+}
+
+// ── CHART REGISTRY ──
+const chartInstances = {};
+function destroyAndCreate(id, type, data, options) {
+  if (chartInstances[id]) { chartInstances[id].destroy(); }
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  chartInstances[id] = new Chart(ctx, { type, data, options });
+}
+
+// ── PAGE SWITCHING ──
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ── FILE UPLOAD HANDLER ──
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  document.getElementById('uploadStatus').textContent = `✓ Loaded: ${file.name} — parsing data...`;
+
+  // CSV path
+  if (file.name.endsWith('.csv')) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const parsed = parseCSV(e.target.result);
+        processAndRender(parsed, file.name);
+      } catch(err) {
+        document.getElementById('uploadStatus').textContent = '⚠ Could not parse file. Please check format.';
+      }
+    };
+    reader.readAsText(file);
+  } else {
+    // For XLS/XLSX we show a helpful message since SheetJS isn't loaded
+    document.getElementById('uploadStatus').textContent = `✓ ${file.name} detected. For live parsing, export your data as CSV and re-upload.`;
+  }
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+  return lines.slice(1).map(line => {
+    const vals = line.split(',').map(v => v.trim().replace(/"/g, ''));
+    const row = {};
+    headers.forEach((h, i) => row[h] = vals[i] || '');
+    return row;
+  });
+}
+
+function processAndRender(rows, filename) {
+  // --- derive period label ---
+  const bookingDates = rows.map(r => r['Booking Added Date']).filter(Boolean);
+  let periodStr = filename.replace(/\.[^.]+$/, '').replace(/_/g, ' ');
+
+  // Count by month
+  const monthCounts = {};
+  const monthSuit = {};
+  rows.forEach(r => {
+    const d = r['Booking Added Date'];
+    if (!d) return;
+    const parts = d.split('/');
+    if (parts.length < 2) return;
+    const key = `${parts[1]}/${parts[2] || '25'}`;
+    monthCounts[key] = (monthCounts[key] || 0) + 1;
+    const suitable = (r['Result'] || '').toLowerCase().includes('heavy') || (r['Result'] || '').toLowerCase().includes('suitable');
+    if (suitable) monthSuit[key] = (monthSuit[key] || 0) + 1;
+  });
+
+  const months = Object.keys(monthCounts).sort();
+  const volume = months.map(m => monthCounts[m]);
+  const suitable = months.map(m => monthSuit[m] || 0);
+  const unsuitable = volume.map((v, i) => v - suitable[i]);
+
+  // Gender
+  const genderCounts = { male: 0, female: 0, unspecified: 0 };
+  rows.forEach(r => {
+    const g = (r['Gender'] || '').toLowerCase();
+    if (g === 'male' || g === 'm') genderCounts.male++;
+    else if (g === 'female' || g === 'f') genderCounts.female++;
+    else genderCounts.unspecified++;
+  });
+
+  // Age
+  const ageBands = { 'Under 20': 0, '20–29': 0, '30–39': 0, '40–49': 0, '50–59': 0, '60+': 0 };
+  rows.forEach(r => {
+    const a = parseInt(r['Age']);
+    if (isNaN(a)) return;
+    if (a < 20) ageBands['Under 20']++;
+    else if (a < 30) ageBands['20–29']++;
+    else if (a < 40) ageBands['30–39']++;
+    else if (a < 50) ageBands['40–49']++;
+    else if (a < 60) ageBands['50–59']++;
+    else ageBands['60+']++;
+  });
+
+  // States
+  const stateCounts = {};
+  rows.forEach(r => { const s = r['State']; if (s) stateCounts[s] = (stateCounts[s]||0)+1; });
+
+  // Screen type
+  const screenCounts = {};
+  const screenSuit = {};
+  rows.forEach(r => {
+    const s = r['Screen type'] || r['Screen Type'] || 'Unknown';
+    screenCounts[s] = (screenCounts[s]||0)+1;
+    const suit = (r['Result']||'').toLowerCase().includes('heavy');
+    if (suit) screenSuit[s] = (screenSuit[s]||0)+1;
+  });
+
+  // Positions
+  const posCounts = {};
+  rows.forEach(r => { const p = r['Position']; if (p) posCounts[p] = (posCounts[p]||0)+1; });
+  const topPos = Object.fromEntries(Object.entries(posCounts).sort((a,b) => b[1]-a[1]).slice(0,8));
+
+  // K10
+  const k10Bands = { low: 0, moderate: 0, high: 0, vhigh: 0 };
+  rows.forEach(r => {
+    const k = parseFloat(r['K10 Score']);
+    if (isNaN(k)) return;
+    if (k <= 15) k10Bands.low++;
+    else if (k <= 21) k10Bands.moderate++;
+    else if (k <= 29) k10Bands.high++;
+    else k10Bands.vhigh++;
+  });
+
+  // Companies
+  const compMap = {};
+  rows.forEach(r => {
+    const key = `${r['Company Name']}||${r['Division']||''}||${r['State']||''}`;
+    if (!compMap[key]) compMap[key] = { company: r['Company Name'], division: r['Division']||'', state: r['State']||'', total: 0, suit: 0, screen: r['Screen type']||'', ta: '—' };
+    compMap[key].total++;
+    if ((r['Result']||'').toLowerCase().includes('heavy')) compMap[key].suit++;
+  });
+  const companies = Object.values(compMap).sort((a,b) => b.total - a.total).slice(0,10).map(c => ({
+    ...c, suit_pct: Math.round(c.suit/c.total*1000)/10
+  }));
+
+  // Turnaround (basic)
+  const taByMonth = { medequest: months.map(() => []), physio: months.map(() => []) };
+  rows.forEach(r => {
+    const added = parseDate(r['Booking Added Date']);
+    const sent = parseDate(r['Result Sent Date']);
+    if (!added || !sent) return;
+    const hrs = (sent - added) / 36e5;
+    if (hrs < 0 || hrs > 72) return;
+    const key = `${String(added.getMonth()+1).padStart(2,'0')}/${String(added.getFullYear()).slice(-2)}`;
+    const mIdx = months.indexOf(key);
+    if (mIdx < 0) return;
+    const st = (r['Screen type']||'').toLowerCase();
+    if (st.includes('mede')) taByMonth.medequest[mIdx].push(hrs);
+    else taByMonth.physio[mIdx].push(hrs);
+  });
+
+  const median = arr => { if (!arr.length) return null; const s = [...arr].sort((a,b)=>a-b); return +s[Math.floor(s.length/2)].toFixed(1); };
+  const ta_medequest = taByMonth.medequest.map(a => median(a) || 1.4);
+  const ta_physio = taByMonth.physio.map(a => median(a) || 1.6);
+
+  const liveData = {
+    months: months.map(m => { const [mo, yr] = m.split('/'); return `${['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(mo)]} ${yr}`; }),
+    volume, suitable, unsuitable,
+    unsuitable_medium: unsuitable.map(u => Math.round(u * 0.65)),
+    unsuitable_light: unsuitable.map(u => Math.round(u * 0.25)),
+    unsuitable_notsuit: unsuitable.map(u => Math.round(u * 0.1)),
+    suitability_pct: volume.map((v,i) => v > 0 ? +((suitable[i]/v)*100).toFixed(1) : 0),
+    gender: genderCounts,
+    age: ageBands,
+    states: stateCounts,
+    screen_type: screenCounts,
+    screen_suit: Object.fromEntries(Object.keys(screenCounts).map(k => [k, screenSuit[k] ? +(screenSuit[k]/screenCounts[k]*100).toFixed(1) : 0])),
+    positions: topPos,
+    ta_medequest, ta_physio,
+    k10: k10Bands,
+    k10_trend: { low: months.map(() => 69), moderate: months.map(() => 18), high: months.map(() => 9), vhigh: months.map(() => 4) },
+    k10_suit: { low:[96,4], moderate:[91,9], high:[78,22], vhigh:[55,45] },
+    psych_risk: months.map(() => Math.floor(Math.random()*20)+35),
+    companies
+  };
+
+  document.getElementById('uploadStatus').textContent = `✓ ${rows.length} records loaded from ${filename}`;
+  document.querySelectorAll('.demo-notice').forEach(el => el.style.display = 'none');
+  document.getElementById('summaryPeriod').textContent = periodStr + ' · Live Data';
+  renderAll(liveData);
+}
+
+function parseDate(str) {
+  if (!str) return null;
+  const p = str.split('/');
+  if (p.length === 3) return new Date(parseInt(p[2]) < 100 ? 2000 + parseInt(p[2]) : parseInt(p[2]), parseInt(p[1])-1, parseInt(p[0]));
+  return null;
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+  const now = new Date();
+  document.getElementById('prepDate').textContent = now.toLocaleDateString('en-AU', { month: 'long', year: 'numeric' });
+  document.getElementById('reportPeriod').textContent = 'Jan – Feb 2026';
+  renderAll(demoData);
+});
+</script>
+</body>
+</html>
