@@ -1336,13 +1336,13 @@ function updatePeriodLabel(months) {
   if (!months || months.length === 0) return;
   const first = months[0];
   const last = months[months.length - 1];
-  const label = first === last ? first : first + ' – ' + last;
+  const label = first === last ? first : first + ' \u2013 ' + last;
   document.getElementById('reportPeriod').textContent = label;
-  document.getElementById('summaryPeriod').textContent = label + ' · Period Summary';
-  // Update all period labels in page headers
-  document.querySelectorAll('.period-label').forEach(el => {
-    const base = el.textContent.split('·')[1];
-    if (base) el.textContent = label + ' ·' + base;
+  document.getElementById('summaryPeriod').textContent = label + ' \u00b7 Period Summary';
+  // Update only non-summary period labels (they follow "Section · [period]" format)
+  document.querySelectorAll('.period-label:not(#summaryPeriod)').forEach(el => {
+    const parts = el.textContent.split('\u00b7');
+    if (parts.length >= 1) el.textContent = parts[0].trim() + ' \u00b7 ' + label;
   });
 }
 </script>
